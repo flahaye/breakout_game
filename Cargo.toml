@@ -1,5 +1,5 @@
 [package]
-name = "bevy_breakout"
+name = "breakout_game"
 version = "0.1.0"
 authors = ["Florian LAHAYE <florian@lahaye.me>"]
 edition = "2021"
