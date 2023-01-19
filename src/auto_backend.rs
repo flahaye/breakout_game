@@ -13,7 +13,7 @@ impl Plugin for AutoBackendPlugin {
         } else if cfg!(target_os = "macos") {
             Backends::METAL
         } else if cfg!(target_os = "linux") {
-            Backends::VULKAN
+            Backends::VULKAN | Backends::GL
         } else {
             Backends::PRIMARY
         };
