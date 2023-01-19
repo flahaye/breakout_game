@@ -59,6 +59,7 @@ fn paddle_control_system(keys: Res<Input<KeyCode>>, mut query: Query<&mut Veloci
     }
 }
 
+#[allow(clippy::type_complexity)]
 fn paddle_wall_collision_system(
     mut paddle_query: Query<
         (&mut Transform, &BoundingBox, &mut Velocity),

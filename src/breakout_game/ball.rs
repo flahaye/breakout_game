@@ -87,6 +87,7 @@ fn launch_ball_system(
     }
 }
 
+#[allow(clippy::type_complexity)]
 fn ball_collision_system(
     mut commands: Commands,
     mut ball_query: Query<
