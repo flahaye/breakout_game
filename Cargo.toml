@@ -1,16 +1,33 @@
 [package]
 name = "bevy_breakout"
 version = "0.1.0"
+authors = ["Florian LAHAYE <florian@lahaye.me>"]
 edition = "2021"
+rust-version = "1.66.1"
+description = "A simple breakout game with Bevy"
+#readme = "README.md"
+#repository = "https://github.com/...../"
+license = "WTFPL"
+#keywords = ["foo", "bar"]
+categories = ["games"]
+exclude = [".*"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+# Game engine
 bevy = "0.9.1"
+
+# Framerate limiter for Bevy
 bevy_framepace = "0.11.0"
+
+# Draw shapes (rectangle, circle, etc.) in Bevy
 bevy_prototype_lyon = "0.7.2"
+
+# Random Number Generator (RNG)
 rand = "0.8.5"
 
+# Optimized profile for final build
 [profile.release-lto]
 inherits = "release"
 lto = true
@@ -19,4 +36,5 @@ codegen-units = 1
 panic = "abort"
 
 [workspace]
+# Use the lastest resolver, recommended for Bevy
 resolver = "2"
