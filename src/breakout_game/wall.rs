@@ -1,8 +1,13 @@
+//! Wall related stuff.
+//! 
+//!  - Spawn walls once at [`StartupStage::PostStartup`] stage.
+
 use super::components::{BallCollider, BoundingBox, Wall};
 use crate::consts::*;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
+/// Wall logic as a Bevy’s plugin.
 pub struct WallPlugin;
 
 impl Plugin for WallPlugin {

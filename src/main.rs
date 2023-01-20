@@ -1,6 +1,9 @@
-//#![allow(unused)]
+//! A simple game of breakout to learn Bevy.
+
 // Disable terminal
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#![warn(missing_docs)]
+//#![allow(unused)]
 
 use auto_backend::AutoBackendPlugin;
 use bevy::prelude::*;

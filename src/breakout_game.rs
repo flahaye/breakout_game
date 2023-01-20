@@ -1,3 +1,5 @@
+//! This module contains the game as plugins.
+
 use self::{
     ball::BallPlugin, brick::BrickPlugin, common::CommonPlugin, paddle::PaddlePlugin,
     wall::WallPlugin,
@@ -11,6 +13,8 @@ pub mod components;
 pub mod paddle;
 pub mod wall;
 
+/// Minimal plugins for the game
+/// Only add the requirements for the other plugins to works.
 pub struct MinimalPlugins;
 
 impl PluginGroup for MinimalPlugins {
@@ -19,6 +23,12 @@ impl PluginGroup for MinimalPlugins {
     }
 }
 
+/// All the game plugins.
+///
+/// Need the following to be added in Bevy’s app to works
+///  - [`bevy::prelude::DefaultPlugins`]
+///  - [`bevy::prelude::Camera2dBundle`]
+///  - [`bevy_prototype_lyon::plugin::ShapePlugin`]
 pub struct DefaultPlugins;
 
 impl PluginGroup for DefaultPlugins {
@@ -33,6 +43,7 @@ impl PluginGroup for DefaultPlugins {
     }
 }
 
+/// Core plugin of the game, contains the requirements for the other plugins.
 pub struct CorePlugin;
 
 impl Plugin for CorePlugin {
@@ -49,11 +60,24 @@ impl Plugin for CorePlugin {
     }
 }
 
+/// Stages of the game, executed in the order of declaration and before [`CoreStage::Update`].
 #[derive(StageLabel)]
 pub enum GameStage {
+    /// Initialize things that need to be reinitialized multiple times.
+    /// Bricks are spawned and balls are reset at this stage.
     Init,
+
+    /// Process input needed for following stages.
     Input,
+
+    /// [`components::Velocity`] is applied at this stage.
     Move,
+
+    /// Paddle related systems.
     Paddle,
+
+    /// Ball related systems.
+    ///
+    /// Should be run after Paddle to get an up to date velocity for collision.
     Ball,
 }

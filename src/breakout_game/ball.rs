@@ -1,3 +1,15 @@
+//! Ball related stuff.
+//! 
+//!  - Spawn the ball at [`StartupStage::PostStartup`] stage.
+//!  - Update the ball’s position in [`BallMoveState::FollowPaddle`] state at [`GameStage::Ball`].
+//!  - Process input to throw the ball at [`GameStage::Ball`] stage.
+//!  - Handle collision of the ball with entities marked with [`BallCollider`] at [`GameStage::Ball`] stage.
+//!  - Reset the ball when going out of window at [`GameStage::Init`] stage.
+//! 
+//! Input to throw the ball use the [`GameStage::Ball`] stage of the [`GameStage::Input`] stage
+//! in order to use the updated paddle’s [`Velocity`] at [`GameStage::Paddle`] stage.
+//! Ideally, this step should be splitted in the two stages, may be implemented later.
+
 use super::{
     components::{Ball, BallCollider, BallMoveState, BoundingBox, Brick, Paddle, Velocity},
     GameStage,
@@ -10,6 +22,7 @@ use bevy::{
 };
 use bevy_prototype_lyon::prelude::*;
 
+/// Ball logic as a Bevy’s plugin. (see the game rules)
 pub struct BallPlugin;
 
 impl Plugin for BallPlugin {

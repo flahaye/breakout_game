@@ -1,3 +1,9 @@
+//! Paddle related stuff.
+//! 
+//!  - Spawn the paddle once at [`StartupStage::PostStartup`] stage.
+//!  - Process input and update [`Velocity`] at [`GameStage::Input`] stage.
+//!  - Handle collision of the paddle with walls at [`GameStage::Paddle`] stage.
+
 use super::{
     components::{BallCollider, BoundingBox, Paddle, Velocity, Wall},
     GameStage,
@@ -9,6 +15,7 @@ use bevy::{
 };
 use bevy_prototype_lyon::prelude::*;
 
+/// Paddle logic as a Bevy’s plugin. (see the game rules)
 pub struct PaddlePlugin;
 
 impl Plugin for PaddlePlugin {
