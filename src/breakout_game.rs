@@ -11,6 +11,7 @@ pub mod brick;
 pub mod common;
 pub mod components;
 pub mod paddle;
+pub mod resources;
 pub mod wall;
 
 /// Minimal plugins for the game

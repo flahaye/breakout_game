@@ -1,9 +1,8 @@
 //! Common behavior through all entities of the game.
-//! 
+//!
 //!  - Apply [`Velocity`] to [`bevy::prelude::Transform`] at [`GameStage::Move`] stage.
 
-use super::{components::Velocity, GameStage};
-use crate::consts::FRAMERATE;
+use super::{components::Velocity, resources::BreakoutConfig, GameStage};
 use bevy::prelude::*;
 
 /// All common behavior as a Bevy’s plugin.
@@ -15,8 +14,8 @@ impl Plugin for CommonPlugin {
     }
 }
 
-fn movement_system(mut query: Query<(&mut Transform, &Velocity)>) {
+fn movement_system(mut query: Query<(&mut Transform, &Velocity)>, cfg: Res<BreakoutConfig>) {
     for (mut tf, velocity) in query.iter_mut() {
-        tf.translation += velocity.0.extend(0.) * (1. / FRAMERATE);
+        tf.translation += velocity.0.extend(0.) * (1. / cfg.framerate);
     }
 }

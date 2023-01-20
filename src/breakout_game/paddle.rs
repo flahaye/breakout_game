@@ -1,14 +1,14 @@
 //! Paddle related stuff.
-//! 
+//!
 //!  - Spawn the paddle once at [`StartupStage::PostStartup`] stage.
 //!  - Process input and update [`Velocity`] at [`GameStage::Input`] stage.
 //!  - Handle collision of the paddle with walls at [`GameStage::Paddle`] stage.
 
 use super::{
     components::{BallCollider, BoundingBox, Paddle, Velocity, Wall},
+    resources::BreakoutConfig,
     GameStage,
 };
-use crate::consts::*;
 use bevy::{
     prelude::*,
     sprite::collide_aabb::{collide, Collision},
@@ -26,9 +26,9 @@ impl Plugin for PaddlePlugin {
     }
 }
 
-fn spawn_paddle_system(mut commands: Commands) {
+fn spawn_paddle_system(mut commands: Commands, cfg: Res<BreakoutConfig>) {
     let shape = shapes::Rectangle {
-        extents: PADDLE_SIZE,
+        extents: cfg.paddle_size,
         ..Default::default()
     };
 
@@ -40,23 +40,31 @@ fn spawn_paddle_system(mut commands: Commands) {
                 outline_mode: StrokeMode::color(Color::BLACK),
             },
             Transform {
-                translation: Vec3::new(0., -WINDOW_HEIGHT / 2. + PADDLE_Y_OFFSET, PADDLE_Z_OFFSET),
+                translation: Vec3::new(
+                    0.,
+                    -cfg.window_height / 2. + cfg.paddle_y_offset,
+                    cfg.paddle_z,
+                ),
                 ..Default::default()
             },
         ))
         .insert(BallCollider)
         .insert(Paddle)
         .insert(Velocity(Vec2::ZERO))
-        .insert(BoundingBox(PADDLE_SIZE));
+        .insert(BoundingBox(cfg.paddle_size));
 }
 
-fn paddle_control_system(keys: Res<Input<KeyCode>>, mut query: Query<&mut Velocity, With<Paddle>>) {
+fn paddle_control_system(
+    keys: Res<Input<KeyCode>>,
+    mut query: Query<&mut Velocity, With<Paddle>>,
+    cfg: Res<BreakoutConfig>,
+) {
     let mut x = 0.;
 
     if keys.pressed(KeyCode::Right) {
-        x += PADDLE_BASE_SPEED;
+        x += cfg.paddle_base_speed;
     } else if keys.pressed(KeyCode::Left) {
-        x -= PADDLE_BASE_SPEED;
+        x -= cfg.paddle_base_speed;
     }
 
     for mut velocity in query.iter_mut() {
@@ -71,12 +79,13 @@ fn paddle_wall_collision_system(
         (With<Paddle>, Without<Wall>),
     >,
     wall_query: Query<(&Transform, &BoundingBox), With<Wall>>,
+    cfg: Res<BreakoutConfig>,
 ) {
     for (mut paddle_tf, paddle_bb, mut paddle_v) in paddle_query.iter_mut() {
         // Clamp the paddle in the window
         paddle_tf.translation.x = paddle_tf.translation.x.clamp(
-            -WINDOW_WIDTH / 2. + paddle_bb.0.x / 2.,
-            WINDOW_WIDTH / 2. - paddle_bb.0.x / 2.,
+            -cfg.window_width / 2. + paddle_bb.0.x / 2.,
+            cfg.window_width / 2. - paddle_bb.0.x / 2.,
         );
 
         // Check collision with walls

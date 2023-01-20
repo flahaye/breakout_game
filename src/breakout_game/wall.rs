@@ -1,9 +1,11 @@
 //! Wall related stuff.
-//! 
+//!
 //!  - Spawn walls once at [`StartupStage::PostStartup`] stage.
 
-use super::components::{BallCollider, BoundingBox, Wall};
-use crate::consts::*;
+use super::{
+    components::{BallCollider, BoundingBox, Wall},
+    resources::BreakoutConfig,
+};
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
@@ -16,12 +18,12 @@ impl Plugin for WallPlugin {
     }
 }
 
-fn spawn_wall_system(mut commands: Commands) {
+fn spawn_wall_system(mut commands: Commands, cfg: Res<BreakoutConfig>) {
     let mut spawn_vertical_wall = |x| {
         let shape = shapes::Rectangle {
             extents: Vec2 {
-                x: WALL_THICKNESS * 2.,
-                y: WINDOW_HEIGHT,
+                x: cfg.wall_thickness * 2.,
+                y: cfg.window_height,
             },
             ..Default::default()
         };
@@ -34,22 +36,25 @@ fn spawn_wall_system(mut commands: Commands) {
                     outline_mode: StrokeMode::color(Color::GRAY),
                 },
                 Transform {
-                    translation: Vec3::new(x, 0., WALL_Z_OFFSET),
+                    translation: Vec3::new(x, 0., cfg.wall_z),
                     ..Default::default()
                 },
             ))
             .insert(BallCollider)
             .insert(Wall)
-            .insert(BoundingBox(Vec2::new(WALL_THICKNESS * 2., WINDOW_HEIGHT)));
+            .insert(BoundingBox(Vec2::new(
+                cfg.wall_thickness * 2.,
+                cfg.window_height,
+            )));
     };
 
-    spawn_vertical_wall(-WINDOW_WIDTH / 2.);
-    spawn_vertical_wall(WINDOW_WIDTH / 2.);
+    spawn_vertical_wall(-cfg.window_width / 2.);
+    spawn_vertical_wall(cfg.window_width / 2.);
 
     let horizontal_wall_shape = shapes::Rectangle {
         extents: Vec2 {
-            x: WINDOW_WIDTH,
-            y: WALL_THICKNESS * 2.,
+            x: cfg.window_width,
+            y: cfg.wall_thickness * 2.,
         },
         ..Default::default()
     };
@@ -62,11 +67,14 @@ fn spawn_wall_system(mut commands: Commands) {
                 outline_mode: StrokeMode::color(Color::GRAY),
             },
             Transform {
-                translation: Vec3::new(0., WINDOW_HEIGHT / 2., WALL_Z_OFFSET),
+                translation: Vec3::new(0., cfg.window_height / 2., cfg.wall_z),
                 ..Default::default()
             },
         ))
         .insert(BallCollider)
         .insert(Wall)
-        .insert(BoundingBox(Vec2::new(WINDOW_WIDTH, WALL_THICKNESS * 2.)));
+        .insert(BoundingBox(Vec2::new(
+            cfg.window_width,
+            cfg.wall_thickness * 2.,
+        )));
 }

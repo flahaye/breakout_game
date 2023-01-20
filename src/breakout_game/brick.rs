@@ -5,12 +5,12 @@
 
 use super::{
     components::{BallCollider, BoundingBox, Brick},
+    resources::BreakoutConfig,
     GameStage,
 };
-use crate::consts::*;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use rand::{thread_rng, Rng};
+use rand::{seq::SliceRandom, thread_rng, Rng};
 
 /// Brick logic as a Bevy’s plugin. (see the game rules)
 pub struct BrickPlugin;
@@ -41,6 +41,7 @@ fn spawn_brick_system(
     time: Res<Time>,
     mut brick_respawn: ResMut<BrickRespawn>,
     bricks_query: Query<&Brick>,
+    cfg: Res<BreakoutConfig>,
 ) {
     if bricks_query.is_empty() {
         brick_respawn.timer.unpause();
@@ -56,29 +57,32 @@ fn spawn_brick_system(
         let mut rng = thread_rng();
 
         let shape = shapes::Rectangle {
-            extents: BRICK_SIZE,
+            extents: cfg.brick_size,
             ..Default::default()
         };
 
         let brick_area_size = Vec2::new(
-            BRICK_AREA_COLS as f32 * BRICK_SIZE.x,
-            BRICK_AREA_ROWS as f32 * BRICK_SIZE.y,
+            cfg.brick_area_cols as f32 * cfg.brick_size.x,
+            cfg.brick_area_rows as f32 * cfg.brick_size.y,
         );
 
         // bottom left brick
         let first_brick_translation = Vec2::new(
-            -brick_area_size.x / 2. + BRICK_SIZE.x / 2.,
-            -brick_area_size.y / 2. + BRICK_SIZE.y / 2. + BRICK_AREA_Y_OFFSET,
+            -brick_area_size.x / 2. + cfg.brick_size.x / 2.,
+            -brick_area_size.y / 2. + cfg.brick_size.y / 2. + cfg.brick_area_y_offset,
         );
 
-        for col in 0..BRICK_AREA_COLS {
-            for row in 0..BRICK_AREA_ROWS {
-                if rng.gen_bool(BRICK_SPAWN_PROBABILITY) {
+        for col in 0..cfg.brick_area_cols {
+            for row in 0..cfg.brick_area_rows {
+                if rng.gen_bool(cfg.brick_spawn_probability) {
                     let brick_offset =
-                        Vec2::new(col as f32 * BRICK_SIZE.x, row as f32 * BRICK_SIZE.y);
-                    let translation =
-                        (first_brick_translation + brick_offset).extend(BRICK_Z_OFFSET);
-                    let color = BRICK_COLORS[rng.gen_range(0..BRICK_COLORS.len())];
+                        Vec2::new(col as f32 * cfg.brick_size.x, row as f32 * cfg.brick_size.y);
+                    let translation = (first_brick_translation + brick_offset).extend(cfg.brick_z);
+                    let color = cfg
+                        .brick_colors
+                        .choose(&mut rng)
+                        .copied()
+                        .unwrap_or(Color::WHITE);
                     commands
                         .spawn(GeometryBuilder::build_as(
                             &shape,
@@ -93,7 +97,7 @@ fn spawn_brick_system(
                         ))
                         .insert(BallCollider)
                         .insert(Brick)
-                        .insert(BoundingBox(BRICK_SIZE));
+                        .insert(BoundingBox(cfg.brick_size));
                 }
             }
         }

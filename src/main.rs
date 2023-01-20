@@ -9,20 +9,25 @@ use auto_backend::AutoBackendPlugin;
 use bevy::prelude::*;
 use bevy_framepace::{FramepacePlugin, FramepaceSettings, Limiter};
 use bevy_prototype_lyon::prelude::*;
-use consts::*;
+use breakout_game::resources::BreakoutConfig;
 
 mod auto_backend;
 pub mod breakout_game;
-mod consts;
 
 fn main() {
+    let cfg = BreakoutConfig::default();
+    let width = cfg.window_width;
+    let height = cfg.window_height;
+    let background_color = cfg.background_color;
+
     App::new()
         .add_plugin(AutoBackendPlugin)
-        .insert_resource(ClearColor(BACKGROUND_COLOR))
+        .insert_resource(ClearColor(background_color))
+        .insert_resource(cfg)
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             window: WindowDescriptor {
-                width: WINDOW_WIDTH,
-                height: WINDOW_HEIGHT,
+                width,
+                height,
                 title: "Breakout in Rust/Bevy".to_string(),
                 resizable: false,
                 ..Default::default()
@@ -36,7 +41,11 @@ fn main() {
         .run();
 }
 
-fn setup_system(mut commands: Commands, mut settings: ResMut<FramepaceSettings>) {
-    settings.limiter = Limiter::from_framerate(FRAMERATE as f64);
+fn setup_system(
+    mut commands: Commands,
+    mut settings: ResMut<FramepaceSettings>,
+    cfg: Res<BreakoutConfig>,
+) {
+    settings.limiter = Limiter::from_framerate(cfg.framerate as f64);
     commands.spawn(Camera2dBundle::default());
 }
