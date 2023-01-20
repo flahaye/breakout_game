@@ -1,9 +1,7 @@
+use super::components::{BallCollider, BoundingBox, Wall};
+use crate::consts::*;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-
-use crate::consts::*;
-
-use super::components::{BallCollider, BoundingBox, Wall};
 
 pub struct WallPlugin;
 

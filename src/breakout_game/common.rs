@@ -1,8 +1,6 @@
-use bevy::prelude::*;
-
-use crate::consts::FRAMERATE;
-
 use super::{components::Velocity, GameStage};
+use crate::consts::FRAMERATE;
+use bevy::prelude::*;
 
 pub struct CommonPlugin;
 

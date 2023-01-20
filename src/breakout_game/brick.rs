@@ -1,10 +1,8 @@
+use super::components::{BallCollider, BoundingBox, Brick};
+use crate::consts::*;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use rand::{thread_rng, Rng};
-
-use crate::consts::*;
-
-use super::components::{BallCollider, BoundingBox, Brick};
 
 pub struct BrickPlugin;
 

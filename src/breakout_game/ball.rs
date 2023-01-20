@@ -1,16 +1,14 @@
+use super::{
+    components::{Ball, BallCollider, BallMoveState, BoundingBox, Brick, Paddle, Velocity},
+    GameStage,
+};
+use crate::consts::*;
 use bevy::{
     prelude::*,
     sprite::collide_aabb::{collide, Collision},
     utils::HashSet,
 };
 use bevy_prototype_lyon::prelude::*;
-
-use crate::consts::*;
-
-use super::{
-    components::{Ball, BallCollider, BallMoveState, BoundingBox, Brick, Paddle, Velocity},
-    GameStage,
-};
 
 pub struct BallPlugin;
 

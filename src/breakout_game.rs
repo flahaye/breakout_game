@@ -1,9 +1,8 @@
-use bevy::{app::PluginGroupBuilder, prelude::*};
-
 use self::{
     ball::BallPlugin, brick::BrickPlugin, common::CommonPlugin, paddle::PaddlePlugin,
     wall::WallPlugin,
 };
+use bevy::{app::PluginGroupBuilder, prelude::*};
 
 pub mod ball;
 pub mod brick;
