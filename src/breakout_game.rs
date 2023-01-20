@@ -7,7 +7,7 @@ use bevy::{app::PluginGroupBuilder, prelude::*};
 pub mod ball;
 pub mod brick;
 pub mod common;
-mod components;
+pub mod components;
 pub mod paddle;
 pub mod wall;
 
