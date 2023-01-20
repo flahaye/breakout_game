@@ -37,7 +37,8 @@ pub struct CorePlugin;
 
 impl Plugin for CorePlugin {
     fn build(&self, app: &mut App) {
-        app.add_stage_before(CoreStage::Update, GameStage::Input, SystemStage::parallel())
+        app.add_stage_before(CoreStage::Update, GameStage::Init, SystemStage::parallel())
+            .add_stage_before(CoreStage::Update, GameStage::Input, SystemStage::parallel())
             .add_stage_before(CoreStage::Update, GameStage::Move, SystemStage::parallel())
             .add_stage_before(
                 CoreStage::Update,
@@ -50,6 +51,7 @@ impl Plugin for CorePlugin {
 
 #[derive(StageLabel)]
 pub enum GameStage {
+    Init,
     Input,
     Move,
     Paddle,

@@ -9,7 +9,7 @@ use bevy_prototype_lyon::prelude::*;
 use consts::*;
 
 mod auto_backend;
-mod breakout_game;
+pub mod breakout_game;
 mod consts;
 
 fn main() {

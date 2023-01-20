@@ -7,6 +7,15 @@ pub struct Ball;
 pub struct BallCollider;
 
 #[derive(Component)]
+pub struct Brick;
+
+#[derive(Component)]
+pub struct Paddle;
+
+#[derive(Component)]
+pub struct Wall;
+
+#[derive(Component)]
 pub enum BallMoveState {
     FollowPaddle,
     Fly,
@@ -15,14 +24,5 @@ pub enum BallMoveState {
 #[derive(Component)]
 pub struct BoundingBox(pub Vec2);
 
-#[derive(Component)]
-pub struct Brick;
-
-#[derive(Component)]
-pub struct Paddle;
-
 #[derive(Component, Default, Clone, Copy)]
 pub struct Velocity(pub Vec2);
-
-#[derive(Component)]
-pub struct Wall;

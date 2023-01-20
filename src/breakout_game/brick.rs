@@ -1,4 +1,7 @@
-use super::components::{BallCollider, BoundingBox, Brick};
+use super::{
+    components::{BallCollider, BoundingBox, Brick},
+    GameStage,
+};
 use crate::consts::*;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
@@ -8,7 +11,8 @@ pub struct BrickPlugin;
 
 impl Plugin for BrickPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(spawn_brick_system).insert_resource(BrickRespawn {
+        app.add_system_to_stage(GameStage::Init, spawn_brick_system)
+            .insert_resource(BrickRespawn {
             immediate_spawn: true,
             timer: Timer::from_seconds(1., TimerMode::Once),
         });
