@@ -16,7 +16,7 @@ impl Plugin for BrickPlugin {
 }
 
 #[derive(Resource)]
-struct BrickRespawn {
+pub struct BrickRespawn {
     immediate_spawn: bool,
     timer: Timer,
 }
