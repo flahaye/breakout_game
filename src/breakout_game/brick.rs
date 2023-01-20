@@ -8,7 +8,7 @@ pub struct BrickPlugin;
 
 impl Plugin for BrickPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(spawn_brick).insert_resource(BrickRespawn {
+        app.add_system(spawn_brick_system).insert_resource(BrickRespawn {
             immediate_spawn: true,
             timer: Timer::from_seconds(1., TimerMode::Once),
         });
@@ -21,7 +21,7 @@ struct BrickRespawn {
     timer: Timer,
 }
 
-fn spawn_brick(
+fn spawn_brick_system(
     mut commands: Commands,
     time: Res<Time>,
     mut brick_respawn: ResMut<BrickRespawn>,

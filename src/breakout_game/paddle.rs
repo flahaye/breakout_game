@@ -13,13 +13,13 @@ pub struct PaddlePlugin;
 
 impl Plugin for PaddlePlugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system_to_stage(StartupStage::PostStartup, setup_system)
+        app.add_startup_system_to_stage(StartupStage::PostStartup, spawn_paddle_system)
             .add_system_to_stage(GameStage::Input, paddle_control_system)
             .add_system_to_stage(GameStage::Paddle, paddle_wall_collision_system);
     }
 }
 
-fn setup_system(mut commands: Commands) {
+fn spawn_paddle_system(mut commands: Commands) {
     let shape = shapes::Rectangle {
         extents: PADDLE_SIZE,
         ..Default::default()

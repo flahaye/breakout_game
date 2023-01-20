@@ -14,15 +14,15 @@ pub struct BallPlugin;
 
 impl Plugin for BallPlugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system_to_stage(StartupStage::PostStartup, spawn_ball)
+        app.add_startup_system_to_stage(StartupStage::PostStartup, spawn_ball_system)
             .add_system_to_stage(GameStage::Ball, follow_paddle_system)
             .add_system_to_stage(GameStage::Ball, launch_ball_system)
             .add_system_to_stage(GameStage::Ball, ball_collision_system)
-            .add_system_to_stage(GameStage::Ball, reset_ball);
+            .add_system_to_stage(GameStage::Ball, reset_ball_system);
     }
 }
 
-fn spawn_ball(mut commands: Commands) {
+fn spawn_ball_system(mut commands: Commands) {
     let shape = shapes::Circle {
         radius: BALL_RADIUS,
         ..Default::default()
@@ -170,7 +170,7 @@ fn ball_collision_system(
     }
 }
 
-fn reset_ball(mut query: Query<(&Transform, &mut BallMoveState, &mut Velocity), With<Ball>>) {
+fn reset_ball_system(mut query: Query<(&Transform, &mut BallMoveState, &mut Velocity), With<Ball>>) {
     for (&tf, mut move_state, mut velocity) in query.iter_mut() {
         if tf.translation.x < -WINDOW_WIDTH / 2. - 200.
             || tf.translation.x > WINDOW_WIDTH / 2. + 200.

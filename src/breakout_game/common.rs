@@ -10,7 +10,7 @@ impl Plugin for CommonPlugin {
     }
 }
 
-pub fn movement_system(mut query: Query<(&mut Transform, &Velocity)>) {
+fn movement_system(mut query: Query<(&mut Transform, &Velocity)>) {
     for (mut tf, velocity) in query.iter_mut() {
         tf.translation += velocity.0.extend(0.) * (1. / FRAMERATE);
     }
