@@ -1,6 +1,9 @@
-//! All the resources used by the game
+//! All the resources used by the game.
 
-use bevy::prelude::{Color, Resource, Vec2};
+use bevy::{
+    prelude::{Color, Resource, Vec2},
+    time::Timer,
+};
 
 /// Configuration used by the game.
 ///
@@ -134,4 +137,15 @@ impl Default for BreakoutConfig {
             ],
         }
     }
+}
+
+/// Indicate if bricks should be spawned or not.
+#[derive(Resource)]
+pub struct BrickRespawn {
+    /// If true, brick will be spawned on the next update, regardless of the timer.
+    pub immediate_spawn: bool,
+
+    /// Bricks will spawn at the end of timer.
+    /// Timer is reset and pause after a spawn.
+    pub timer: Timer,
 }

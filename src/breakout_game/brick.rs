@@ -1,11 +1,11 @@
 //! Brick related stuff.
 //!
 //!  - Spawn or respawn bricks at [`GameStage::Init`].
-//!  - Insert [`BrickRespawn`] resource.
+//!  - Insert a [`BrickRespawn`] resource.
 
 use super::{
     components::{BallCollider, BoundingBox, Brick},
-    resources::BreakoutConfig,
+    resources::{BreakoutConfig, BrickRespawn},
     GameStage,
 };
 use bevy::prelude::*;
@@ -23,17 +23,6 @@ impl Plugin for BrickPlugin {
                 timer: Timer::from_seconds(1., TimerMode::Once),
             });
     }
-}
-
-/// Indicate if bricks should be spawned or not.
-#[derive(Resource)]
-pub struct BrickRespawn {
-    /// If true, brick will be spawned on the next update, regardless of the timer.
-    immediate_spawn: bool,
-
-    /// Bricks will spawn at the end of timer.
-    /// Timer is reset and pause after a spawn.
-    timer: Timer,
 }
 
 fn spawn_brick_system(
