@@ -7,7 +7,7 @@
 //!  - Reset the ball when going out of window at [`GameStage::Init`] stage.
 
 use super::{
-    components::{Ball, BallCollider, BallMoveState, BoundingBox, Brick, Paddle, Velocity},
+    components::{BallCollider, BoundingBox, Brick, FlyingBall, Paddle, StationaryBall, Velocity},
     resources::BreakoutConfig,
     GameStage,
 };
@@ -49,45 +49,43 @@ fn spawn_ball_system(mut commands: Commands, cfg: Res<BreakoutConfig>) {
                 ..Default::default()
             },
         ))
-        .insert(Ball)
+        .insert(StationaryBall)
         .insert(BoundingBox(Vec2::new(
             cfg.ball_radius * 2.,
             cfg.ball_radius * 2.,
         )))
-        .insert(BallMoveState::FollowPaddle)
         .insert(Velocity(Vec2::ZERO));
 }
 
 fn follow_paddle_system(
-    paddle_query: Query<&Transform, (With<Paddle>, Without<Ball>)>,
-    mut ball_query: Query<(&BallMoveState, &mut Transform), With<Ball>>,
+    paddle_query: Query<&Transform, With<Paddle>>,
+    mut ball_query: Query<&mut Transform, (With<StationaryBall>, Without<Paddle>)>,
     cfg: Res<BreakoutConfig>,
 ) {
     if let Ok(paddle_tf) = paddle_query.get_single() {
-        for (move_state, mut ball_tf) in ball_query.iter_mut() {
-            if let BallMoveState::FollowPaddle = move_state {
-                ball_tf.translation.x = paddle_tf.translation.x;
-                ball_tf.translation.y = paddle_tf.translation.y
-                    + cfg.paddle_size.y / 2.
-                    + cfg.ball_y_offset
-                    + cfg.ball_radius;
-            }
+        for mut ball_tf in ball_query.iter_mut() {
+            ball_tf.translation.x = paddle_tf.translation.x;
+            ball_tf.translation.y = paddle_tf.translation.y
+                + cfg.paddle_size.y / 2.
+                + cfg.ball_y_offset
+                + cfg.ball_radius;
         }
     }
 }
 
 fn throw_ball_system(
+    mut commands: Commands,
     keys: Res<Input<KeyCode>>,
-    mut query: Query<(&mut BallMoveState, &mut Velocity), With<Ball>>,
+    mut ball_query: Query<(Entity, &mut Velocity), With<StationaryBall>>,
     cfg: Res<BreakoutConfig>,
 ) {
     if keys.just_pressed(KeyCode::Space) || keys.just_pressed(KeyCode::Up) {
-        for (mut move_state, mut ball_v) in query.iter_mut() {
-            if let BallMoveState::FollowPaddle = *move_state {
-                *move_state = BallMoveState::Fly;
-                ball_v.0 = Vec2::new(0., -cfg.ball_base_speed);
-                break;
-            }
+        if let Some((ball_entity, mut ball_v)) = ball_query.iter_mut().next() {
+            commands
+                .entity(ball_entity)
+                .remove::<StationaryBall>()
+                .insert(FlyingBall);
+            ball_v.0 = Vec2::new(0., -cfg.ball_base_speed);
         }
     }
 }
@@ -97,7 +95,7 @@ fn ball_collision_system(
     mut commands: Commands,
     mut ball_query: Query<
         (&mut Transform, &BoundingBox, &mut Velocity),
-        (With<Ball>, Without<BallCollider>),
+        (With<FlyingBall>, Without<BallCollider>),
     >,
     wall_query: Query<
         (
@@ -179,17 +177,21 @@ fn ball_collision_system(
 }
 
 fn reset_ball_system(
-    mut query: Query<(&Transform, &mut BallMoveState, &mut Velocity), With<Ball>>,
+    mut commands: Commands,
+    mut query: Query<(Entity, &Transform, &mut Velocity), With<FlyingBall>>,
     cfg: Res<BreakoutConfig>,
 ) {
-    for (&tf, mut move_state, mut velocity) in query.iter_mut() {
+    for (entity, &tf, mut velocity) in query.iter_mut() {
         if tf.translation.x < -cfg.window_width / 2. - 200.
             || tf.translation.x > cfg.window_width / 2. + 200.
             || tf.translation.y < -cfg.window_height / 2. - 200.
             || tf.translation.y > cfg.window_height / 2. + 200.
         {
             velocity.0 = Vec2::ZERO;
-            *move_state = BallMoveState::FollowPaddle;
+            commands
+                .entity(entity)
+                .remove::<FlyingBall>()
+                .insert(StationaryBall);
         }
     }
 }

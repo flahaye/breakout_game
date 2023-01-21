@@ -2,9 +2,13 @@
 
 use bevy::prelude::{Component, Vec2};
 
-/// A marker component to identify balls.
+/// A marker component to identify a stationary ball.
 #[derive(Component)]
-pub struct Ball;
+pub struct StationaryBall;
+
+/// A marker component to identify a flying ball.
+#[derive(Component)]
+pub struct FlyingBall;
 
 /// A marker component to identify entities that can collide with balls.
 #[derive(Component)]
@@ -21,18 +25,6 @@ pub struct Paddle;
 /// A marker component to identify walls.
 #[derive(Component)]
 pub struct Wall;
-
-/// State of the ball, following the paddle or flying.
-///
-/// Processed by [`super::ball`] systems at [`super::GameStage::Ball`] stage.
-#[derive(Component)]
-pub enum BallMoveState {
-    /// The ball follow the paddle, no yet thrown.
-    FollowPaddle,
-
-    /// The ball was thrown
-    Fly,
-}
 
 /// A bounding box for collision.
 /// Contains the size of the bounding rectangle,
