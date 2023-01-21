@@ -2,13 +2,9 @@
 //!
 //!  - Spawn the ball at [`StartupStage::PostStartup`] stage.
 //!  - Update the ball’s position in [`BallMoveState::FollowPaddle`] state at [`GameStage::Ball`].
-//!  - Process input to throw the ball at [`GameStage::Ball`] stage.
+//!  - Process input to throw the ball at [`GameStage::Input`] stage.
 //!  - Handle collision of the ball with entities marked with [`BallCollider`] at [`GameStage::Ball`] stage.
 //!  - Reset the ball when going out of window at [`GameStage::Init`] stage.
-//!
-//! Input to throw the ball use the [`GameStage::Ball`] stage of the [`GameStage::Input`] stage
-//! in order to use the updated paddle’s [`Velocity`] at [`GameStage::Paddle`] stage.
-//! Ideally, this step should be splitted in the two stages, may be implemented later.
 
 use super::{
     components::{Ball, BallCollider, BallMoveState, BoundingBox, Brick, Paddle, Velocity},
@@ -29,7 +25,7 @@ impl Plugin for BallPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system_to_stage(StartupStage::PostStartup, spawn_ball_system)
             .add_system_to_stage(GameStage::Ball, follow_paddle_system)
-            .add_system_to_stage(GameStage::Ball, throw_ball_system)
+            .add_system_to_stage(GameStage::Input, throw_ball_system)
             .add_system_to_stage(GameStage::Ball, ball_collision_system)
             .add_system_to_stage(GameStage::Init, reset_ball_system);
     }
@@ -83,23 +79,14 @@ fn follow_paddle_system(
 fn throw_ball_system(
     keys: Res<Input<KeyCode>>,
     mut query: Query<(&mut BallMoveState, &mut Velocity), With<Ball>>,
-    paddle_query: Query<&Velocity, (With<Paddle>, Without<Ball>)>,
     cfg: Res<BreakoutConfig>,
 ) {
     if keys.just_pressed(KeyCode::Space) || keys.just_pressed(KeyCode::Up) {
-        if let Ok(paddle_v) = paddle_query.get_single() {
-            for (mut move_state, mut ball_v) in query.iter_mut() {
-                if let BallMoveState::FollowPaddle = *move_state {
-                    *move_state = BallMoveState::Fly;
-
-                    let velocity = if paddle_v.0.x != 0. {
-                        Vec2::new(paddle_v.0.x, paddle_v.0.x.abs())
-                    } else {
-                        Vec2::new(0., 1.)
-                    };
-                    ball_v.0 = velocity.normalize_or_zero() * cfg.ball_base_speed;
-                    break;
-                }
+        for (mut move_state, mut ball_v) in query.iter_mut() {
+            if let BallMoveState::FollowPaddle = *move_state {
+                *move_state = BallMoveState::Fly;
+                ball_v.0 = Vec2::new(0., -cfg.ball_base_speed);
+                break;
             }
         }
     }
