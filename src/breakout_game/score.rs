@@ -4,7 +4,7 @@ use bevy::prelude::*;
 
 use crate::breakout_game::components::ScoreText;
 
-use super::{components::Score, resources::BreakoutConfig, GameStage};
+use super::{components::Score, resources::GameConfig, GameStage};
 
 /// Score logic as a Bevy’s plugin. (see the game rules)
 pub struct ScorePlugin;
@@ -16,7 +16,7 @@ impl Plugin for ScorePlugin {
     }
 }
 
-fn spawn_score(mut commands: Commands, asset_server: Res<AssetServer>, cfg: Res<BreakoutConfig>) {
+fn spawn_score(mut commands: Commands, asset_server: Res<AssetServer>, cfg: Res<GameConfig>) {
     commands.spawn(Score(cfg.startup_score));
 
     commands.spawn((

@@ -9,13 +9,13 @@ use auto_backend::AutoBackendPlugin;
 use bevy::prelude::*;
 use bevy_framepace::{FramepacePlugin, FramepaceSettings, Limiter};
 use bevy_prototype_lyon::prelude::*;
-use breakout_game::resources::BreakoutConfig;
+use breakout_game::resources::GameConfig;
 
 mod auto_backend;
 pub mod breakout_game;
 
 fn main() {
-    let cfg = BreakoutConfig::default();
+    let cfg = GameConfig::default();
     let width = cfg.window_width;
     let height = cfg.window_height;
     let background_color = cfg.background_color;
@@ -44,7 +44,7 @@ fn main() {
 fn setup_system(
     mut commands: Commands,
     mut settings: ResMut<FramepaceSettings>,
-    cfg: Res<BreakoutConfig>,
+    cfg: Res<GameConfig>,
 ) {
     settings.limiter = Limiter::from_framerate(cfg.framerate as f64);
     commands.spawn(Camera2dBundle::default());

@@ -9,7 +9,7 @@ use bevy::{
 ///
 /// Use the same definition for pixel than Bevy.
 #[derive(Resource, Clone)]
-pub struct BreakoutConfig {
+pub struct GameConfig {
     /// Expected framerate.
     pub framerate: f32,
 
@@ -74,9 +74,9 @@ pub struct BreakoutConfig {
     pub brick_colors: Vec<Color>,
 }
 
-impl Default for BreakoutConfig {
-    fn default() -> BreakoutConfig {
-        BreakoutConfig {
+impl Default for GameConfig {
+    fn default() -> GameConfig {
+        GameConfig {
             framerate: 60.,
 
             window_width: 430.,

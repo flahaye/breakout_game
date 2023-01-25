@@ -5,7 +5,7 @@
 
 use super::{
     components::{BallCollider, BoundingBox, Brick},
-    resources::{BreakoutConfig, BrickRespawn},
+    resources::{BrickRespawn, GameConfig},
     GameStage,
 };
 use bevy::prelude::*;
@@ -30,7 +30,7 @@ fn spawn_brick_system(
     time: Res<Time>,
     mut brick_respawn: ResMut<BrickRespawn>,
     bricks_query: Query<&Brick>,
-    cfg: Res<BreakoutConfig>,
+    cfg: Res<GameConfig>,
 ) {
     if bricks_query.is_empty() {
         brick_respawn.timer.unpause();

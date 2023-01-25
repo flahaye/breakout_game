@@ -4,7 +4,7 @@
 
 use super::{
     components::{BallCollider, BoundingBox, Wall},
-    resources::BreakoutConfig,
+    resources::GameConfig,
 };
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
@@ -18,7 +18,7 @@ impl Plugin for WallPlugin {
     }
 }
 
-fn spawn_wall_system(mut commands: Commands, cfg: Res<BreakoutConfig>) {
+fn spawn_wall_system(mut commands: Commands, cfg: Res<GameConfig>) {
     let mut spawn_vertical_wall = |x| {
         let shape = shapes::Rectangle {
             extents: Vec2 {

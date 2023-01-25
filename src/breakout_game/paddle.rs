@@ -6,7 +6,7 @@
 
 use super::{
     components::{BallCollider, BoundingBox, Paddle, Velocity, Wall},
-    resources::BreakoutConfig,
+    resources::GameConfig,
     GameStage,
 };
 use bevy::{
@@ -26,7 +26,7 @@ impl Plugin for PaddlePlugin {
     }
 }
 
-fn spawn_paddle_system(mut commands: Commands, cfg: Res<BreakoutConfig>) {
+fn spawn_paddle_system(mut commands: Commands, cfg: Res<GameConfig>) {
     let shape = shapes::Rectangle {
         extents: cfg.paddle_size,
         ..Default::default()
@@ -57,7 +57,7 @@ fn spawn_paddle_system(mut commands: Commands, cfg: Res<BreakoutConfig>) {
 fn paddle_control_system(
     keys: Res<Input<KeyCode>>,
     mut query: Query<&mut Velocity, With<Paddle>>,
-    cfg: Res<BreakoutConfig>,
+    cfg: Res<GameConfig>,
 ) {
     let mut x = 0.;
 
@@ -79,7 +79,7 @@ fn paddle_wall_collision_system(
         (With<Paddle>, Without<Wall>),
     >,
     wall_query: Query<(&Transform, &BoundingBox), With<Wall>>,
-    cfg: Res<BreakoutConfig>,
+    cfg: Res<GameConfig>,
 ) {
     for (mut paddle_tf, paddle_bb, mut paddle_v) in paddle_query.iter_mut() {
         // Clamp the paddle in the window

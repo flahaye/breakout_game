@@ -10,7 +10,7 @@ use super::{
     components::{
         BallCollider, BoundingBox, Brick, FlyingBall, Paddle, Score, StationaryBall, Velocity,
     },
-    resources::BreakoutConfig,
+    resources::GameConfig,
     GameStage,
 };
 use bevy::{
@@ -33,7 +33,7 @@ impl Plugin for BallPlugin {
     }
 }
 
-fn spawn_ball_system(mut commands: Commands, cfg: Res<BreakoutConfig>) {
+fn spawn_ball_system(mut commands: Commands, cfg: Res<GameConfig>) {
     let shape = shapes::Circle {
         radius: cfg.ball_radius,
         ..Default::default()
@@ -62,7 +62,7 @@ fn spawn_ball_system(mut commands: Commands, cfg: Res<BreakoutConfig>) {
 fn follow_paddle_system(
     paddle_query: Query<&Transform, With<Paddle>>,
     mut ball_query: Query<&mut Transform, (With<StationaryBall>, Without<Paddle>)>,
-    cfg: Res<BreakoutConfig>,
+    cfg: Res<GameConfig>,
 ) {
     if let Ok(paddle_tf) = paddle_query.get_single() {
         for mut ball_tf in ball_query.iter_mut() {
@@ -79,7 +79,7 @@ fn throw_ball_system(
     mut commands: Commands,
     keys: Res<Input<KeyCode>>,
     mut ball_query: Query<(Entity, &mut Velocity), With<StationaryBall>>,
-    cfg: Res<BreakoutConfig>,
+    cfg: Res<GameConfig>,
 ) {
     if keys.just_pressed(KeyCode::Space) || keys.just_pressed(KeyCode::Up) {
         if let Some((ball_entity, mut ball_v)) = ball_query.iter_mut().next() {
@@ -110,7 +110,7 @@ fn ball_collision_system(
         With<BallCollider>,
     >,
     mut score_query: Query<&mut Score>,
-    cfg: Res<BreakoutConfig>,
+    cfg: Res<GameConfig>,
 ) {
     let mut despawned_entities = HashSet::new();
     for (mut ball_tf, ball_bb, mut ball_v) in ball_query.iter_mut() {
@@ -186,7 +186,7 @@ fn ball_collision_system(
 fn reset_ball_system(
     mut commands: Commands,
     mut query: Query<(Entity, &Transform, &mut Velocity), With<FlyingBall>>,
-    cfg: Res<BreakoutConfig>,
+    cfg: Res<GameConfig>,
 ) {
     for (entity, &tf, mut velocity) in query.iter_mut() {
         if tf.translation.x < -cfg.window_width / 2. - 200.
