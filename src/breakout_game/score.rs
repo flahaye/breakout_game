@@ -4,7 +4,11 @@ use bevy::prelude::*;
 
 use crate::breakout_game::components::ScoreText;
 
-use super::{components::Score, resources::GameConfig, GameStage};
+use super::{
+    components::Score,
+    resources::{GameAssets, GameConfig},
+    GameStage,
+};
 
 /// Score logic as a Bevy’s plugin. (see the game rules)
 pub struct ScorePlugin;
@@ -16,7 +20,7 @@ impl Plugin for ScorePlugin {
     }
 }
 
-fn spawn_score(mut commands: Commands, asset_server: Res<AssetServer>, cfg: Res<GameConfig>) {
+fn spawn_score(mut commands: Commands, game_assets: Res<GameAssets>, cfg: Res<GameConfig>) {
     commands.spawn(Score(cfg.startup_score));
 
     commands.spawn((
@@ -25,13 +29,13 @@ fn spawn_score(mut commands: Commands, asset_server: Res<AssetServer>, cfg: Res<
             TextSection::new(
                 "Score: ",
                 TextStyle {
-                    font: asset_server.load(&cfg.score_font_path),
+                    font: game_assets.score_font.clone(),
                     font_size: cfg.score_font_size,
                     color: Color::WHITE,
                 },
             ),
             TextSection::from_style(TextStyle {
-                font: asset_server.load(&cfg.score_font_path),
+                font: game_assets.score_font.clone(),
                 font_size: cfg.score_font_size,
                 color: Color::GOLD,
             }),

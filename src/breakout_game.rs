@@ -1,8 +1,8 @@
 //! This module contains the game as plugins.
 
 use self::{
-    ball::BallPlugin, brick::BrickPlugin, common::CommonPlugin, paddle::PaddlePlugin,
-    score::ScorePlugin, wall::WallPlugin,
+    ball::BallPlugin, brick::BrickPlugin, common::CommonPlugin, game_assets::GameAssetsPlugin,
+    paddle::PaddlePlugin, score::ScorePlugin, wall::WallPlugin,
 };
 use bevy::{app::PluginGroupBuilder, prelude::*};
 
@@ -10,6 +10,7 @@ pub mod ball;
 pub mod brick;
 pub mod common;
 pub mod components;
+mod game_assets;
 pub mod paddle;
 pub mod resources;
 pub mod score;
@@ -21,7 +22,9 @@ pub struct MinimalPlugins;
 
 impl PluginGroup for MinimalPlugins {
     fn build(self) -> PluginGroupBuilder {
-        PluginGroupBuilder::start::<Self>().add(CorePlugin)
+        PluginGroupBuilder::start::<Self>()
+            .add(CorePlugin)
+            .add(GameAssetsPlugin)
     }
 }
 
@@ -37,6 +40,7 @@ impl PluginGroup for DefaultPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(CorePlugin)
+            .add(GameAssetsPlugin)
             .add(BallPlugin)
             .add(BrickPlugin)
             .add(CommonPlugin)

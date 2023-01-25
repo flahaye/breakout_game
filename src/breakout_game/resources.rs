@@ -1,7 +1,8 @@
 //! All the resources used by the game.
 
 use bevy::{
-    prelude::{Color, Resource, Vec2},
+    prelude::{Color, Handle, Resource, Vec2},
+    text::Font,
     time::Timer,
 };
 
@@ -162,4 +163,11 @@ pub struct BrickRespawn {
     /// Bricks will spawn at the end of timer.
     /// Timer is reset and pause after a spawn.
     pub timer: Timer,
+}
+
+/// Store all the game assets.
+#[derive(Resource)]
+pub struct GameAssets {
+    /// Font used to render score in game.
+    pub score_font: Handle<Font>,
 }
