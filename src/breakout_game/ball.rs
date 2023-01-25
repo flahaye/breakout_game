@@ -174,7 +174,7 @@ fn ball_collision_system(
                         despawned_entities.insert(wall_entity);
 
                         if let Ok(mut score) = score_query.get_single_mut() {
-                            score.0 += 10;
+                            score.0 += cfg.score_brick;
                         }
                     }
                 }
