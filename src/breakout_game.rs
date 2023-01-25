@@ -51,7 +51,7 @@ impl PluginGroup for DefaultPlugins {
 }
 
 /// Core plugin of the game, contains the requirements for the other plugins.
-pub struct CorePlugin;
+struct CorePlugin;
 
 impl Plugin for CorePlugin {
     fn build(&self, app: &mut App) {
@@ -70,7 +70,7 @@ impl Plugin for CorePlugin {
 
 /// Stages of the game, executed in the order of declaration and before [`CoreStage::Update`].
 #[derive(StageLabel)]
-pub enum GameStage {
+enum GameStage {
     /// Initialize things that need to be reinitialized multiple times.
     /// Bricks are spawned and balls are reset at this stage.
     Init,

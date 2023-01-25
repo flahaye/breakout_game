@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use super::resources::{GameAssets, GameConfig};
 
-pub(crate) struct GameAssetsPlugin;
+pub struct GameAssetsPlugin;
 
 impl Plugin for GameAssetsPlugin {
     fn build(&self, app: &mut App) {
