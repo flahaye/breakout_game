@@ -2,7 +2,7 @@
 
 use self::{
     ball::BallPlugin, brick::BrickPlugin, common::CommonPlugin, paddle::PaddlePlugin,
-    wall::WallPlugin,
+    score::ScorePlugin, wall::WallPlugin,
 };
 use bevy::{app::PluginGroupBuilder, prelude::*};
 
@@ -12,6 +12,7 @@ pub mod common;
 pub mod components;
 pub mod paddle;
 pub mod resources;
+pub mod score;
 pub mod wall;
 
 /// Minimal plugins for the game
@@ -40,6 +41,7 @@ impl PluginGroup for DefaultPlugins {
             .add(BrickPlugin)
             .add(CommonPlugin)
             .add(PaddlePlugin)
+            .add(ScorePlugin)
             .add(WallPlugin)
     }
 }
@@ -57,7 +59,8 @@ impl Plugin for CorePlugin {
                 GameStage::Paddle,
                 SystemStage::parallel(),
             )
-            .add_stage_before(CoreStage::Update, GameStage::Ball, SystemStage::parallel());
+            .add_stage_before(CoreStage::Update, GameStage::Ball, SystemStage::parallel())
+            .add_stage_before(CoreStage::Update, GameStage::Ui, SystemStage::parallel());
     }
 }
 
@@ -81,4 +84,7 @@ pub enum GameStage {
     ///
     /// Should be run after Paddle to get an up to date velocity for collision.
     Ball,
+
+    /// UI related systems.
+    Ui,
 }

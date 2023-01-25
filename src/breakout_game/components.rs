@@ -36,6 +36,17 @@ pub struct Wall;
 #[derive(Component)]
 pub struct BoundingBox(pub Vec2);
 
+/// Game’s score.
+#[derive(Component)]
+pub struct Score(pub i32);
+
+/// Identify the text displaying the game’s score and the corresponding section index.
+#[derive(Component)]
+pub struct ScoreText {
+    /// The section index displaying the score.
+    pub section: usize,
+}
+
 /// Velocity to apply to [`bevy::prelude::Transform`] at [`super::GameStage::Move`] stage.
 #[derive(Component, Default, Clone, Copy)]
 pub struct Velocity(pub Vec2);

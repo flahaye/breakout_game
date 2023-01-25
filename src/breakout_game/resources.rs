@@ -61,6 +61,15 @@ pub struct BreakoutConfig {
     /// Number of columns of the brick’s spawning area.
     pub brick_area_cols: u32,
 
+    /// Initial score when the game start.
+    pub startup_score: i32,
+    /// Score gain for breaking a brick.
+    pub score_brick: i32,
+    /// Path to the font file used to render score in game.
+    pub score_font_path: String,
+    /// Font size of the in game score text.
+    pub score_font_size: f32,
+
     /// Possibles colors for bricks, chosen at random.
     pub brick_colors: Vec<Color>,
 }
@@ -94,6 +103,11 @@ impl Default for BreakoutConfig {
             brick_area_y_offset: 100.,
             brick_area_rows: 12,
             brick_area_cols: 6,
+
+            startup_score: 0,
+            score_brick: 1,
+            score_font_path: "fonts/arial.ttf".to_string(),
+            score_font_size: 32.,
 
             brick_colors: vec![
                 Color::ALICE_BLUE,

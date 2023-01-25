@@ -7,7 +7,9 @@
 //!  - Reset the ball when going out of window at [`GameStage::Init`] stage.
 
 use super::{
-    components::{BallCollider, BoundingBox, Brick, FlyingBall, Paddle, StationaryBall, Velocity},
+    components::{
+        BallCollider, BoundingBox, Brick, FlyingBall, Paddle, Score, StationaryBall, Velocity,
+    },
     resources::BreakoutConfig,
     GameStage,
 };
@@ -107,6 +109,7 @@ fn ball_collision_system(
         ),
         With<BallCollider>,
     >,
+    mut score_query: Query<&mut Score>,
     cfg: Res<BreakoutConfig>,
 ) {
     let mut despawned_entities = HashSet::new();
@@ -169,6 +172,10 @@ fn ball_collision_system(
                     if let Some(mut entity_commands) = commands.get_entity(wall_entity) {
                         entity_commands.despawn();
                         despawned_entities.insert(wall_entity);
+
+                        if let Ok(mut score) = score_query.get_single_mut() {
+                            score.0 += 10;
+                        }
                     }
                 }
             }
