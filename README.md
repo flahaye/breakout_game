@@ -10,7 +10,7 @@ Install Rust from [rustup.rs](https://rustup.rs/).
 
 If you use Linux, install dependencies for Bevy, [from documentation of Bevy](https://github.com/bevyengine/bevy/blob/main/docs/linux_dependencies.md).
 
-Unzip (if needed) and run the following command.
+Download the repository, unzip (if needed) and run the following command inside.
 
 ```bash
 cargo run --release
